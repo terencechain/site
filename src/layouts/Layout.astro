@@ -1,0 +1,26 @@
+---
+import '../styles/global.css';
+const { title = 'Terence', description = 'Staff software engineer at Offchain Labs. Ethereum core developer.' } = Astro.props;
+const path = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <nav>
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>about</a>
+        <a href="/work" aria-current={path.startsWith('/work') ? 'page' : undefined}>work</a>
+      </nav>
+      <slot />
+    </main>
+    <footer>
+      &copy; {new Date().getFullYear()} &middot; <a href="https://github.com/terencechain">github</a> &middot; <a href="mailto:ttsao@offchainlabs.com">email</a>
+    </footer>
+  </body>
+</html>

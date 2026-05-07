@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const eips = [
+  { num: 'EIP-7805', title: 'Fork-choice enforced inclusion lists (FOCIL)', url: 'https://eips.ethereum.org/EIPS/eip-7805' },
+  { num: 'EIP-7732', title: 'Enshrined Proposer-Builder Separation', url: 'https://eips.ethereum.org/EIPS/eip-7732' },
+];
+
+const projects = [
+  { name: 'Prysm', desc: 'Ethereum consensus client', url: 'https://github.com/OffchainLabs/prysm' },
+  { name: 'consensus-specs', desc: 'Ethereum consensus layer specifications', url: 'https://github.com/ethereum/consensus-specs' },
+];
+
+const papers = [
+  { title: 'BoLD: Fast and Cheap Dispute Resolution', url: 'https://arxiv.org/abs/2404.10491' },
+];
+---
+<Layout title="Work — Terence">
+  <h1>Work</h1>
+  <p class="lede">Things I've built, written, or contributed to.</p>
+
+  <h2>EIPs</h2>
+  <ul class="bare">
+    {eips.map(e => (
+      <li><a href={e.url}>{e.num}</a><span class="meta">{e.title}</span></li>
+    ))}
+  </ul>
+
+  <h2>Projects</h2>
+  <ul class="bare">
+    {projects.map(p => (
+      <li><a href={p.url}>{p.name}</a><span class="meta">{p.desc}</span></li>
+    ))}
+  </ul>
+
+  <h2>Papers</h2>
+  <ul class="bare">
+    {papers.map(p => (
+      <li><a href={p.url}>{p.title}</a></li>
+    ))}
+  </ul>
+</Layout>
