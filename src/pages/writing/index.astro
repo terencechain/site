@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+type PostModule = {
+  url?: string;
+  frontmatter: { title: string; date: unknown; description?: string };
+};
+
+const toDate = (v: unknown): Date => {
+  if (v instanceof Date) return v;
+  const s = String(v);
+  const ymd = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return ymd ? new Date(Date.UTC(+ymd[1], +ymd[2] - 1, +ymd[3])) : new Date(s);
+};
+
+const modules = import.meta.glob<PostModule>('./**/*.md', { eager: true });
+const posts = Object.values(modules)
+  .filter(m => m.url)
+  .sort((a, b) => +toDate(b.frontmatter.date) - +toDate(a.frontmatter.date));
+
+const fmt = (v: unknown) =>
+  toDate(v).toLocaleDateString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric' });
+---
+<Layout title="Writing — Terence">
+  <h1>Writing</h1>
+  <p class="lede">Notes on Ethereum.</p>
+
+  <ul class="bare">
+    {posts.map(p => (
+      <li>
+        <a href={p.url}>{p.frontmatter.title}</a>
+        <span class="meta">{fmt(p.frontmatter.date)}</span>
+      </li>
+    ))}
+  </ul>
+</Layout>

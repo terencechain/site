@@ -1,7 +1,14 @@
 ---
 import '../styles/global.css';
-const { title = 'Terence', description = 'Staff software engineer at Offchain Labs. Ethereum core developer.' } = Astro.props;
+const {
+  title = 'Terence',
+  description = 'Staff software engineer at Offchain Labs. Ethereum core developer.',
+  image,
+  type = 'website',
+} = Astro.props;
 const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site).href;
+const ogImage = image ? new URL(image, Astro.site).href : undefined;
 ---
 <!doctype html>
 <html lang="en">
@@ -10,11 +17,26 @@ const path = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Terence" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
   </head>
   <body>
     <main>
       <nav>
         <a href="/" aria-current={path === '/' ? 'page' : undefined}>about</a>
+        <a href="/writing" aria-current={path.startsWith('/writing') ? 'page' : undefined}>writing</a>
         <a href="/work" aria-current={path.startsWith('/work') ? 'page' : undefined}>work</a>
       </nav>
       <slot />

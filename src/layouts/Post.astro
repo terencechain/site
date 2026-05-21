@@ -1,0 +1,30 @@
+---
+import Layout from './Layout.astro';
+
+const { frontmatter } = Astro.props;
+const { title, date, description, image } = frontmatter;
+
+const parseDate = (v: unknown): Date | null => {
+  if (!v) return null;
+  if (v instanceof Date) return v;
+  const s = String(v);
+  const ymd = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (ymd) return new Date(Date.UTC(+ymd[1], +ymd[2] - 1, +ymd[3]));
+  const d = new Date(s);
+  return isNaN(+d) ? null : d;
+};
+const d = parseDate(date);
+const isoDate = d ? d.toISOString().slice(0, 10) : '';
+const prettyDate = d
+  ? d.toLocaleDateString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+---
+<Layout title={`${title} — Terence`} description={description ?? title} image={image} type="article">
+  <article class="post">
+    <header>
+      <h1>{title}</h1>
+      {prettyDate && <time datetime={isoDate}>{prettyDate}</time>}
+    </header>
+    <slot />
+  </article>
+</Layout>
