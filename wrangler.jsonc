@@ -1,5 +1,6 @@
 {
   "name": "site",
+  "account_id": "8a9237dce68971c83730b5d095be0cc8",
   "compatibility_date": "2025-05-01",
   "assets": {
     "directory": "./dist",
