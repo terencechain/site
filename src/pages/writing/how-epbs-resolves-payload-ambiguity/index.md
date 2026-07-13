@@ -3,7 +3,7 @@ layout: ../../../layouts/Post.astro
 title: How ePBS Resolves Payload Ambiguity
 date: "2026-07-10"
 description: ePBS lets validators agree on a consensus block while disagreeing on its payload. The Payload Timeliness Committee publishes a shared result inside the slot.
-image: /og/how-epbs-resolves-payload-ambiguity.png
+image: /og/how-epbs-resolves-payload-ambiguity-card.png
 ---
 
 The last post [ePBS changes how Ethereum scales](/writing/epbs-changes-how-ethereum-scales/) ended on an open question. [ePBS](https://eips.ethereum.org/EIPS/eip-7732) separates the consensus block from the execution payload, and the consensus block is attested before the payload is revealed. Validators can agree that the consensus block arrived on time while disagreeing on whether its payload did. This post covers how ePBS resolves payload ambiguity: a sampled committee votes inside the slot on whether the payload and blobs were revealed on time.
