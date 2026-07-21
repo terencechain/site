@@ -1,6 +1,6 @@
 ---
 layout: ../../../layouts/Post.astro
-title: ePBS Changes How Ethereum Scales
+title: How ePBS Changes Ethereum Scaling
 date: "2026-05-20"
 description: Separating the beacon block from the execution payload lets Ethereum use more of the 12-second slot, raising throughput without hurting decentralization.
 image: /og/epbs-changes-how-ethereum-scales.png
