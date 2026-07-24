@@ -26,7 +26,7 @@ So what must each builder entry express? Start with why requests are signed at a
 
 What the naive option fails to cover is that operators may run a proxy in front of several builders, so the address a request is dialed to may not be the builder identity it signs over. And if a builder moves to a new host, that breaks the auth, because the URL the proposer signed no longer matches.
 
-The better fix is to separate identity from transport. The signed value becomes `auth_data`, bytes the proposer and the builder agree on ahead of time. The URL becomes plain routing information, just where to dial. By default `auth_data` is just the UTF-8 bytes of the builder's url, so an operator who runs no proxy configures nothing extra. If a request is routed to the wrong builder, that builder sees `auth_data` it does not know and rejects it, so the auth fails.
+The better fix is to separate identity from transport. The signed value becomes `auth_data`, bytes the proposer and the builder agree on ahead of time. The URL becomes plain routing information, just where to dial. For a builder with no negotiated terms, `auth_data` is just the UTF-8 bytes of its url. If a request is routed to the wrong builder, that builder sees `auth_data` it does not know and rejects it, so the auth fails.
 
 The following example shows what one builder entry in the proposer's configuration looks like. `url` is where the builder is dialed. `pubkey` is the builder's staked key, the same key that signs its bids. A proxy needs no field of its own. An operator points the url at the proxy and sets `auth_data` to identify the downstream builder, and the beacon node forwards the signed bytes unchanged. The last three fields configure how the builder's bids compete and get chosen on the proposer side.
 
@@ -63,7 +63,7 @@ Max execution payment is a new field. A bid's protocol payment is trustless, the
 
 The floor value works the same as today. A per-builder `min_bid` refuses bids below a threshold.
 
-Finally, defaults keep most cases simple. A homestaker may just want to write one default preference config that applies to every validator key. A pool should be able to override it per validator key and per builder. The format is a map with fallbacks, not a flat list of flags, with per-builder entries, builder-level defaults, per-key overrides, and a global default config. That format is now headed toward a standard, pending community feedback. A proposed keymanager API endpoint, `/eth/v1/validator/config`, manages fee recipient, gas limit, graffiti, and the full builder preference set as one document per key, retiring narrower keymanager operations in the process.
+Finally, defaults keep most cases simple. A homestaker may just want to write one default preference config that applies to every validator key. A pool should be able to override it per validator key and per builder. Those defaults live with whoever writes the config. What travels over the API is fully resolved, one complete document per key with every field spelled out, and `pubkey` is the only optional builder field. The validator client never reasons about an inheritance chain where it holds one set of defaults and the request body carries another. Resolution is the caller's job, since the caller owns its own config setup. A proposed keymanager API endpoint, `/eth/v1/validator/config`, manages fee recipient, gas limit, graffiti, and the full builder preference set as one document per key, retiring narrower keymanager operations in the process. That format is now headed toward a standard, pending community feedback.
 
 *Before, three narrow endpoint families, nine operations.*
 
@@ -91,23 +91,21 @@ POST /eth/v1/validator/config
 ```json
 {
   "data": {
-    "default_config": {
-      "fee_recipient": "0x8943545177806ED17B9F23F0a21ee5948eCaa776",
-      "builder": {
-        "enabled": true,
-        "builders": [{ "url": "https://builder-a.example.com" }]
-      }
-    },
     "configs": {
       "0xa057816155...4070efcd75140eada5ac83a92506dd7a": {
         "fee_recipient": "0x50155530FCE8a85ec7055A5F8b2bE214B3DaeFd3",
+        "target_gas_limit": "45000000",
+        "graffiti": "example graffiti",
         "builder": {
           "enabled": true,
           "builders": [
             {
               "url": "https://builder-a.example.com",
-              "auth_data": "0x123123123abc...",
-              "max_execution_payment": "250000000"
+              "auth_data": "0x68747470733a2f2f6275696c6465722d612e6578616d706c652e636f6d",
+              "pubkey": "0x93247f2209ab...b56f43611df74a",
+              "max_execution_payment": "250000000",
+              "min_bid": "10000000",
+              "builder_boost_factor": "100"
             }
           ]
         }
