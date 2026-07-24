@@ -26,9 +26,9 @@ So what must each builder entry express? Start with why requests are signed at a
 
 What the naive option fails to cover is that operators may run a proxy in front of several builders, so the address a request is dialed to may not be the builder identity it signs over. And if a builder moves to a new host, that breaks the auth, because the URL the proposer signed no longer matches.
 
-The better fix is to separate identity from transport. The signed value becomes `auth_data`, bytes the proposer and the builder agree on ahead of time. The URL becomes plain routing information, just where to dial. If a request is routed to the wrong builder, that builder sees `auth_data` it does not know and rejects it, so the auth fails.
+The better fix is to separate identity from transport. The signed value becomes `auth_data`, bytes the proposer and the builder agree on ahead of time. The URL becomes plain routing information, just where to dial. By default `auth_data` is just the UTF-8 bytes of the builder's url, so an operator who runs no proxy configures nothing extra. If a request is routed to the wrong builder, that builder sees `auth_data` it does not know and rejects it, so the auth fails.
 
-The following example shows what one builder entry in the proposer's configuration looks like. `url` is where the builder is dialed. `pubkey` is the builder's staked key, the same key that signs its bids. `proxy`, when set, overrides the transport so requests dial this address instead of the url. The last three fields configure how the builder's bids compete and get chosen on the proposer side.
+The following example shows what one builder entry in the proposer's configuration looks like. `url` is where the builder is dialed. `pubkey` is the builder's staked key, the same key that signs its bids. A proxy needs no field of its own. An operator points the url at the proxy and sets `auth_data` to identify the downstream builder, and the beacon node forwards the signed bytes unchanged. The last three fields configure how the builder's bids compete and get chosen on the proposer side.
 
 *Before, the url doubles as the signed identity.*
 
@@ -36,7 +36,6 @@ The following example shows what one builder entry in the proposer's configurati
 {
   "url": "https://builder-a.example.com",
   "pubkey": "0x93247f2209ab...b56f43611df74a",
-  "proxy": "http://side-car:9001",
   "max_execution_payment": "250000000",
   "min_bid": "10000000",
   "builder_boost_factor": "100"
@@ -50,7 +49,6 @@ The following example shows what one builder entry in the proposer's configurati
   "url": "https://builder-a.example.com",
   "auth_data": "0x123123123abc...",
   "pubkey": "0x93247f2209ab...b56f43611df74a",
-  "proxy": "http://side-car:9001",
   "max_execution_payment": "250000000",
   "min_bid": "10000000",
   "builder_boost_factor": "100"
