@@ -145,6 +145,31 @@ ul.bare .meta { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
   font-size: 0.85em;
 }
 
+.post table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 0 0 1.5rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.post th,
+.post td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+
+.post th:first-child,
+.post td:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.post th { font-weight: 600; }
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
