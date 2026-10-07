@@ -3,7 +3,7 @@ layout: ../../../layouts/Post.astro
 title: Very early scaling results from Glamsterdam on Sepolia
 date: "2026-10-06"
 description: Early Sepolia measurements show faster beacon block arrival, faster block processing, and shorter payload validation times as gas use rises.
-image: /og/very-early-glamsterdam-scaling-results.png
+image: /og/glamsterdam-sepolia-timeline.png
 ---
 
 Larger blocks take longer to download and validate. To scale Ethereum, nodes need more time to do that work, and ways to do it more efficiently. [Glamsterdam](https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement) improves both. [ePBS](https://eips.ethereum.org/EIPS/eip-7732) separates the beacon block from the execution payload, letting payload download and validation use more of the slot. [BALs](https://eips.ethereum.org/EIPS/eip-7928) let execution clients read state and validate transactions in parallel. ePBS gives execution more time, and BALs let clients do more with that time.
